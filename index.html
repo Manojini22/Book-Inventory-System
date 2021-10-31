@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Book Inventory System</title>
+</head>
+<body>
+ <div class="row container">
+     <!-- Title -->
+    <div class="col s12 center"><h2 class="title">Book Inventory System</h2></div>
+    <div class="row">
+        <img class="col m4 s12 img1" src="./undraw_Bookshelves.svg" alt="undraw_Bookshelves">
+        <img class="col m4 s12 img2" src="./undraw_Books_l33t.svg" alt="undraw_Bookshelves">
+        <img class="col m4 s12 img3" src="./undraw_book_lover_mkck.svg" alt="undraw_Bookshelves">
+        <!-- <div class="block col m4 s12"></div>
+        <div class="block col m4 s12"></div>
+        <div class="block col m4 s12"></div> -->
+</div>
+    <!-- Form -->
+    <form class="col s12">
+        <div class="row">
+          
+          <div class="input-field col m6 s12">
+            <input id="book_name" type="text" class="validate">
+            <label for="book_name">Book Name</label>
+          </div>
+          <div class="input-field col m6 s12">
+              <select class="browser-default mySelect">
+                  <option value="" disabled selected>Choose Status</option>
+                  <option value="1">Active</option>
+                  <option value="0">Inactive</option>
+                </select>
+          </div>
+          <div class="input-field col s12">
+            <a class="btn waves-effect waves-light btn-small purple lighten-3 addBtn">Add</a>
+            <a class="btn waves-effect waves-light btn-small blue-grey lighten-1 modal-trigger" href="#modal1">Edit</a>
+            <a class="btn waves-effect waves-light btn-small red lighten-1 modal-trigger" href="#modal2">Delete</a>
+            <a class="btn waves-effect waves-light btn-small blue-grey lighten-1 cancelBtn">Cancel</a>
+        </div>
+        </div>
+        <!-- Modals -->
+        <div id="modal1" class="modal">
+          <div class="modal-content">
+            <h5>Editing Content</h5>
+            <p>Please note the consequence of this action. Once edited, it cannot be reverted.</p>
+            <div class="input-field col m2 s6">
+              <input id="edit_id" type="number">
+              <label for="edit_id">Book id</label>
+            </div>
+            <div class="input-field col m3 s12">
+                <select class="browser-default" id="edit_select">
+                    <option value="1" selected>Active</option>
+                    <option value="0">Inactive</option>
+                  </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat editBtn">Edit</a>
+          </div>
+        </div>
+
+        <div id="modal2" class="modal">
+          <div class="modal-content">
+            <h5><strong>Deleting</strong> content</h5>
+            <p>Please note the consequence of this action. Once deleted, it cannot be retrieved.</p>
+            <div class="input-field col m2 s6">
+              <input id="del_id" type="number">
+              <label for="del_id">Book id</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green dropBtn btn-flat">Delete</a>
+          </div>
+        </div>
+
+
+    </form>
+    <div class="col s12">
+        <table border="2" class="table">
+            <tr class="trow">
+            <th>Book ID</th>
+            <th>Book Name</th>
+            <th>Status</th>
+            </tr>
+            <tbody id="tbody">
+                <!-- <tr>
+                  <td>text1.1</td>
+                  <td>text1.2</td>
+                  <td>text1.3</td>
+                </tr> -->
+                
+             </tbody>
+    </table>
+    </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script src = "./index.js"></script>
+</html>
+ 
