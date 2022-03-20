@@ -1,138 +1,62 @@
-//----- Constants ----- 
-const LOCAL = "localhost:3000";
-const PROD = null //null for now;
+const express = require('express');
+require('dotenv').config();
+const app = express();
+const db = require("./db/books");
+const cors = require('cors');
+
+const PORT = process.env.PORT || 2000;
+
+let allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', "*");
+    res.header('Access-Control-Allow-Headers', "*");
+    next();
+  }
+  //http://127.0.0.1:5500/index.html
+
+//Express middlewares
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+app.use(cors());
+app.use(allowCrossDomain);
+// app.use(function (req, res, next) {
+//     res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500/index.html');
+//     res.header('Access-Control-Allow-Headers','http://127.0.0.1:5500/index.html');
+//     next();
+//   });
 
 
-const URL = `http://${LOCAL}/books`;
+// GET client---->server  (Read)
+// POST client --info--->server (Create)
+// PATCH client ---:id--->server (Update)
+// DELETE client --:id--->server (Delete)
 
-// -----Variables------
+app.get("/", (req,res) => {
+    res.status(200).json({message: "Welcome to Book Inventory API"}); 
+});
 
-//table
-var table = document.getElementsByClassName("table"); 
-var tbody = document.querySelector('#tbody');
+app.post("/books", async (req,res) => {
+    const result = await db.insertBook(req.body);
+    res.status(201).json({id: result[0]});
+});
 
-//buttons
-var addBtn = document.querySelector(".addBtn");
-var cancelBtn = document.querySelector(".cancelBtn");
-var editBtn = document.querySelector(".editBtn");
-var dropBtn = document.querySelector(".dropBtn");
+app.get("/books", async (req,res) => {
+    const result = await db.showBooks();
+    res.status(200).json({result});
+});
 
-//form
-var bookName = document.querySelector('input[type="text"]');
-var mySelect = document.querySelector(".mySelect")
-
-//Others
-
-
-
-//Fetching API form backend(NodeJS) 
-fetch(URL, {mode: "cors"})
-    .then(response => response.json())
-    .then(data => {
-        console.log(data.result)
-        data.result.forEach(book => {
-            console.log(book.bname);
-            var rows = `
-                <tr>
-                  <td>${book.id}</td>
-                  <td>${book.bname}</td>
-                  <td>${book.status === 1 ? "Active" : "Inactive"}</td>
-                </tr>
-            `
-            tbody.innerHTML += rows
-        })
-    })
-
-
-//Add button functionality
-addBtn.addEventListener('click', () => {
-    var data = {
-        bname: bookName.value,
-        status: parseInt(mySelect.value)
-    }
-    //console.log(mySelect.value)
-
-    fetch(URL, {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-    console.log(data);
-    location.reload();
+app.get("/books/:id", async (req,res) => {
+    const result = await db.showBook(req.params.id);
+    res.status(200).json({result});
 })
 
-//Edit button functionality
-editBtn.addEventListener('click', () => {
-    var edit_id = document.querySelector("#edit_id").value;
-    var edit_select = document.querySelector("#edit_select").value;
-    var data = {
-        id: parseInt(edit_id),
-        status: parseInt(edit_select)
-    }
-    fetch(URL+"/"+edit_id, {
-        method: "PATCH",
-        headers: {
-            "Content-type": "Application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => console.log(response))
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
-    console.log(edit_id);
-    location.reload();
-})
+app.patch("/books/:id", async (req,res) => {
+    const result = await db.updateBook(req.params.id, req.body);
+    res.status(200).json({result});
+});
 
-//Delete button functionality
-dropBtn.addEventListener('click', () => {
-    var drop_id = document.querySelector("#del_id").value;
-    //console.log(drop_id);
-    var data = {
-        id: parseInt(drop_id)
-    }
-    fetch(URL+"/"+drop_id, {
-        method: "DELETE",
-        headers: {
-            "Content-type":"Application/json"
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => console.log(response))
-    .then(data => {
-        console.log('Success:', data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+app.delete("/books/:id", async (req,res) => {
+    await db.deleteBook(req.params.id);
+    res.status(200).json({success: true});
+});
 
-    //console.log(edit_id);
-    location.reload();
-})
-
-//Cancel button functionality
-cancelBtn.addEventListener('click', () => {
-        bookName.value = "";
-        mySelect.value = "";
-})
-
-
-/*
-JQuery goes here
-*/
-
-$(document).ready(function(){
-    $('.modal').modal();
-  });
+app.listen(PORT, () => console.log(`Server running at PORT ${PORT}`));
